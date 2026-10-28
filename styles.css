@@ -794,3 +794,102 @@ body::after {
   .sw__in { transform: none !important; }
   .js .manifesto__text .w { opacity: 1; }
 }
+
+/* ── 27 · CATÁLOGO (tarjetas + visor de cartel) ────────────────── */
+.cat { position: relative; padding: clamp(70px, 11vw, 150px) 0; background: radial-gradient(55% 45% at 88% 10%, rgba(14, 60, 150, .28), transparent 70%), radial-gradient(40% 35% at 6% 92%, rgba(255, 181, 46, .07), transparent 70%); }
+.cat__grid { display: grid; grid-template-columns: 1fr; gap: 1.1rem; }
+.cat-item > article { height: 100%; }
+
+.cat-card {
+  --accent: var(--cyan); --rgb: 43, 228, 255;
+  position: relative; display: flex; flex-direction: column; overflow: hidden; border-radius: var(--r-lg); border: 1px solid var(--line);
+  background: linear-gradient(160deg, rgba(14, 44, 112, .5), rgba(4, 14, 40, .78));
+  box-shadow: 0 30px 70px -40px rgba(0, 0, 0, .9), inset 0 1px 0 rgba(255, 255, 255, .05);
+  transition: border-color .4s, box-shadow .5s var(--ease);
+}
+.cat-card--sun { --accent: var(--gold); --rgb: 255, 181, 46; background: linear-gradient(160deg, rgba(58, 26, 69, .55), rgba(10, 13, 40, .8)); border-color: rgba(255, 190, 90, .22); }
+.cat-card::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .4s; background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(var(--rgb), .16), transparent 60%); }
+.cat-card:hover { border-color: rgba(var(--rgb), .55); box-shadow: 0 34px 80px -34px rgba(var(--rgb), .35), inset 0 1px 0 rgba(255, 255, 255, .07); }
+.cat-card:hover::before { opacity: 1; }
+
+.cat-card__media { position: relative; z-index: 1; display: block; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #061a45; cursor: zoom-in; text-align: left; color: inherit; }
+.cat-card__media:focus-visible { outline-offset: -4px; }
+.cat-card__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) scale(1.08); transition: transform 1s var(--ease); }
+.cat-card:hover .cat-card__media img { transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) scale(1.14); }
+.cat-card__media::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(2, 8, 23, .06) 45%, rgba(2, 8, 23, .85)); }
+.cat-card__num { position: absolute; z-index: 2; left: 1rem; bottom: .15rem; font: 800 clamp(3.2rem, 9vw, 4.6rem)/1 var(--f-display); letter-spacing: -.06em; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, .45); }
+.cat-card__zoom { position: absolute; z-index: 3; right: 1rem; bottom: 1rem; display: inline-flex; align-items: center; gap: .45rem; padding: .5rem .8rem; border-radius: 999px; font: 600 .64rem/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: #fff; background: rgba(4, 14, 40, .6); border: 1px solid rgba(160, 210, 255, .35); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background .4s, border-color .4s, color .4s; }
+.cat-card__zoom .ic { width: .95rem; height: .95rem; stroke-width: 2; }
+.cat-card__media:hover .cat-card__zoom, .cat-card__media:focus-visible .cat-card__zoom { background: rgba(var(--rgb), .2); border-color: var(--accent); color: var(--accent); }
+
+.cat-card__body { position: relative; z-index: 1; display: flex; flex: 1; flex-direction: column; gap: 1rem; padding: clamp(1.2rem, 3vw, 1.6rem); }
+.cat-card__kicker { display: inline-flex; align-items: center; gap: .5rem; color: var(--accent); }
+.cat-card__title { font: 700 clamp(1.3rem, 2.1vw, 1.6rem)/1.12 var(--f-display); letter-spacing: -.03em; color: #fff; text-wrap: balance; }
+.cat-card__lead { color: #b9cdea; font-size: .94rem; text-wrap: pretty; }
+.spec__price dd { color: var(--accent); }
+.spec__price dd s { display: block; font: 500 .74em/1.1 var(--f-display); color: var(--muted); opacity: .8; }
+.spec dd small { font: 500 .6rem/1 var(--f-mono); letter-spacing: .1em; color: var(--muted); }
+.spec__text dd { font-size: .8rem; line-height: 1.25; }
+
+.cat-more { border: 1px solid var(--line); border-radius: 16px; background: rgba(255, 255, 255, .025); transition: border-color .4s, background .4s; }
+.cat-more[open] { border-color: rgba(var(--rgb), .4); background: rgba(var(--rgb), .05); }
+.cat-more summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem 1rem; border-radius: 16px; cursor: pointer; list-style: none; font: 600 .86rem/1.2 var(--f-display); color: #fff; }
+.cat-more summary::-webkit-details-marker { display: none; }
+.cat-more summary .ic { width: 1.1rem; height: 1.1rem; color: var(--accent); transition: transform .5s var(--ease); }
+.cat-more[open] summary .ic { transform: rotate(45deg); }
+.cat-more__body { display: grid; gap: 1rem; padding: .1rem 1rem 1.1rem; animation: catOpen .6s var(--ease); }
+.cat-more__body p { color: var(--muted); font-size: .9rem; }
+.cat-card .checks { grid-template-columns: 1fr; gap: .55rem; }
+.cat-card .checks li { align-items: flex-start; font-size: .88rem; }
+.cat-card .checks .ic { margin-top: .08rem; }
+.cat-more__body .cat-note { padding: .8rem 1rem; border-radius: 14px; border: 1px dashed rgba(var(--rgb), .4); background: rgba(var(--rgb), .05); color: #dbe7f7; font-size: .86rem; }
+.cat-note strong { color: var(--accent); }
+.cat-route { display: grid; gap: .2rem; margin-left: .4rem; border-left: 1px dashed rgba(var(--rgb), .45); }
+.cat-route li { position: relative; padding: .4rem 0 .4rem 1.3rem; font-size: .86rem; line-height: 1.45; color: var(--muted); }
+.cat-route li::before { content: ''; position: absolute; left: -5px; top: .95rem; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+.cat-route b { display: block; font: 600 .9rem/1.3 var(--f-display); letter-spacing: -.01em; color: #fff; }
+
+.cat-card__cta { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: auto; padding-top: .2rem; }
+.cat-card__cta .btn { flex: 1 1 auto; }
+.cat-card__cta .btn .ic { width: 1.15em; height: 1.15em; }
+
+/* Visor de carteles: mismo lenguaje que el lightbox de la galería */
+.clb .lb__fig img { max-height: calc(100vh - 15rem); max-height: calc(100svh - 15rem); }
+.clb .lb__fig .btn { margin-top: .1rem; }
+@media (max-width: 959px) {
+  /* En móvil el cartel ocupa todo el ancho (hay que poder leerlo) y las flechas pasan debajo */
+  .clb { grid-template-columns: 1fr 1fr; align-content: center; row-gap: 1rem; }
+  .clb .lb__fig { grid-column: 1 / -1; grid-row: 1; }
+  .clb .lb__nav--prev { grid-row: 2; justify-self: start; }
+  .clb .lb__nav--next { grid-row: 2; grid-column: 2; justify-self: end; }
+}
+.menu.is-open .menu__links a:nth-child(6) { transition-delay: .6s; }
+
+@keyframes catOpen { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
+@media (min-width: 600px) {
+  .cat__grid { grid-template-columns: repeat(2, 1fr); }
+  .cat-item:nth-child(2n) { --rd: .09s; }
+}
+@media (min-width: 600px) and (max-width: 1199px) {
+  .cat-item:last-child { grid-column: 1 / -1; }
+}
+@media (min-width: 960px) {
+  .clb .lb__fig img { max-height: calc(100vh - 12rem); max-height: calc(100svh - 12rem); }
+}
+@media (min-width: 1200px) {
+  .cat__grid { grid-template-columns: repeat(3, 1fr); }
+  .cat-item:nth-child(2n) { --rd: 0s; }
+  .cat-item:nth-child(3n + 2) { --rd: .09s; }
+  .cat-item:nth-child(3n) { --rd: .18s; }
+}
+
+/* Menú de escritorio con el enlace "Catálogo" (6 enlaces): en anchos medios se compacta
+   para que ningún enlace se parta en dos líneas. Desde 1160px queda igual que antes. */
+@media (min-width: 960px) and (max-width: 1159px) {
+  .nav__links a { padding: .6rem; white-space: nowrap; }
+}
+@media (min-width: 960px) and (max-width: 1039px) {
+  .nav__cta { padding: .8rem; }
+  .nav__cta span { display: none; }
+}

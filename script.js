@@ -604,6 +604,61 @@
   });
 
   /* ═══════════════════════════════════════════════════════════════
+     CATÁLOGO: visor de carteles (independiente del lightbox de la galería)
+     ═══════════════════════════════════════════════════════════════ */
+  const clb = $('#clb');
+  const catCards = $$('.cat-card[data-poster]');
+  if (clb && catCards.length) {
+    const clbImg = $('#clbImg'), clbCap = $('#clbCap'), clbCta = $('#clbCta');
+    const clbKeys = $$('button, a[href]', clb);
+    let clbIndex = 0, clbFocus = null, clbSwipe = null;
+
+    const showPoster = i => {
+      clbIndex = (i + catCards.length) % catCards.length;
+      const card = catCards[clbIndex];
+      clbImg.src = card.dataset.poster;
+      clbImg.alt = `Cartel: ${card.dataset.name}`;
+      clbCap.textContent = card.dataset.name;
+      clbCta.href = $('a[data-wa]', card).href;
+      // Precarga los vecinos para que las flechas respondan al instante
+      [clbIndex - 1, clbIndex + 1].forEach(n => { new Image().src = catCards[(n + catCards.length) % catCards.length].dataset.poster; });
+    };
+    const openPoster = i => {
+      clbFocus = document.activeElement;
+      showPoster(i);
+      clb.classList.add('is-open'); clb.setAttribute('aria-hidden', 'false'); body.classList.add('lb-open');
+      $('.lb__close', clb).focus();
+    };
+    const closePoster = () => {
+      clb.classList.remove('is-open'); clb.setAttribute('aria-hidden', 'true'); body.classList.remove('lb-open');
+      if (clbFocus) clbFocus.focus();
+    };
+
+    catCards.forEach((card, i) => $$('[data-open-poster]', card).forEach(b => b.addEventListener('click', () => openPoster(i))));
+    $('.lb__close', clb).addEventListener('click', closePoster);
+    $('.lb__nav--prev', clb).addEventListener('click', () => showPoster(clbIndex - 1));
+    $('.lb__nav--next', clb).addEventListener('click', () => showPoster(clbIndex + 1));
+    clb.addEventListener('click', e => { if (e.target === clb || e.target.classList.contains('lb__fig')) closePoster(); });
+    addEventListener('keydown', e => {
+      if (!clb.classList.contains('is-open')) return;
+      if (e.key === 'Escape') closePoster();
+      if (e.key === 'ArrowRight') showPoster(clbIndex + 1);
+      if (e.key === 'ArrowLeft') showPoster(clbIndex - 1);
+      if (e.key === 'Tab') { // el foco se queda dentro del diálogo
+        const first = clbKeys[0], last = clbKeys[clbKeys.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+    clb.addEventListener('pointerdown', e => { clbSwipe = e.clientX; });
+    clb.addEventListener('pointerup', e => {
+      if (clbSwipe == null) return;
+      const dx = e.clientX - clbSwipe; clbSwipe = null;
+      if (Math.abs(dx) > 60) showPoster(clbIndex + (dx < 0 ? 1 : -1));
+    });
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
      MOTOR DE SCROLL — un solo requestAnimationFrame para todo
      ═══════════════════════════════════════════════════════════════ */
   const S = { y: 0, sy: 0, vs: 0 };
